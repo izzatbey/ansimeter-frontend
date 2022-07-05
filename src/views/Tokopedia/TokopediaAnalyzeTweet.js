@@ -11,16 +11,73 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { MainListItems } from "./ListItems";
-import { Container, Grid } from "@mui/material";
+import { MainListItems } from "../ListItems";
+import { Button, Container, Grid } from "@mui/material";
 import { useNavigate } from "react-router";
 import { makeStyles } from "@mui/styles";
 import { blue } from "@mui/material/colors";
-import TokopediaCard from "../components/Card/TokopediaCard";
-import ShopeeCard from "../components/Card/ShopeeCard";
-import LazadaCard from "../components/Card/LazadaCard";
-import BlibliCard from "../components/Card/BlibliCard";
-import BukalapakCard from "../components/Card/BukalapakCard";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { getCrawlDataTokopedia } from "../../service/crawl";
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+];
+
+const data = [
+  {
+    date: "2022-07-05 10:30:25+00:00",
+    tweet:
+      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+    username: "FJB Android",
+    sentimen: "Negative",
+  },
+  {
+    date: "2022-07-05 10:10:59+00:00",
+    tweet: "b'@BukaBantuan Pls cdm ya,,'",
+    username: "gembrot",
+    sentimen: "Positive",
+  },
+  {
+    date: "2022-07-05 10:30:25+00:00",
+    tweet:
+      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+    username: "FJB Android",
+    sentimen: "Netral",
+  },
+  {
+    date: "2022-07-05 10:10:59+00:00",
+    tweet: "b'@BukaBantuan Pls cdm ya,,'",
+    username: "gembrot",
+    sentimen: "Negative",
+  },
+  {
+    date: "2022-07-05 10:30:25+00:00",
+    tweet:
+      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+    username: "FJB Android",
+    sentimen: "Positive",
+  },
+  {
+    date: "2022-07-05 10:10:59+00:00",
+    tweet: "b'@BukaBantuan Pls cdm ya,,'",
+    username: "gembrot",
+    sentimen: "Netral",
+  },
+];
 
 const drawerWidth = 240;
 
@@ -76,7 +133,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Marketplace = () => {
+function TokopediaDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -93,6 +150,15 @@ const Marketplace = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleClick = () => {
+    navigate("/grafik-tokped");
+  };
+
+  //Uncomment Function Berikut
+  // React.useEffect(async () => {
+  //   await getCrawlDataTokopedia();
+  // }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -125,7 +191,7 @@ const Marketplace = () => {
             sx={{ flexGrow: 1 }}
             align="right"
           >
-            Marketplace
+            Data Sentimen
           </Typography>
         </Toolbar>
       </AppBar>
@@ -160,29 +226,50 @@ const Marketplace = () => {
         <Toolbar />
         <Container maxWidth="xl">
           <Grid container spacing={2} marginTop={4}>
-            <Grid item xs={4}>
-              <TokopediaCard />
+            <Grid container>
+              <Grid container xs={6} justifyContent="flex-start">
+                <Typography>Data Tweet Bersentimen Tokopedia</Typography>
+              </Grid>
+              <Grid container xs={6} justifyContent="flex-end">
+                <Button onClick={handleClick}>Lihat Grafik</Button>
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <ShopeeCard />
-            </Grid>
-            <Grid item xs={4}>
-              <LazadaCard />
-            </Grid>
-          </Grid>
-          <Grid container marginTop={4}>
-            <Grid xs={2} />
-            <Grid item xs={4}>
-              <BlibliCard />
-            </Grid>
-            <Grid item xs={4}>
-              <BukalapakCard />
+            <Grid container>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Tanggal Tweet</TableCell>
+                      <TableCell>Username</TableCell>
+                      <TableCell>Data Tweet</TableCell>
+                      <TableCell>Sentimen</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.map((row) => (
+                      <TableRow
+                        key={row.date}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.date}
+                        </TableCell>
+                        <TableCell>{row.username}</TableCell>
+                        <TableCell>{row.tweet}</TableCell>
+                        <TableCell>{row.sentimen}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         </Container>
       </Box>
     </Box>
   );
-};
+}
 
-export default Marketplace;
+export default TokopediaDataTweet;

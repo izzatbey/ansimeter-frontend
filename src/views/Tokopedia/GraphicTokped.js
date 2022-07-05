@@ -11,16 +11,48 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { MainListItems } from "./ListItems";
-import { Container, Grid } from "@mui/material";
+import { MainListItems } from "../ListItems";
+import { Button, Container, Grid } from "@mui/material";
 import { useNavigate } from "react-router";
 import { makeStyles } from "@mui/styles";
 import { blue } from "@mui/material/colors";
-import TokopediaCard from "../components/Card/TokopediaCard";
-import ShopeeCard from "../components/Card/ShopeeCard";
-import LazadaCard from "../components/Card/LazadaCard";
-import BlibliCard from "../components/Card/BlibliCard";
-import BukalapakCard from "../components/Card/BukalapakCard";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { getCrawlDataTokopedia } from "../../service/crawl";
+import SentimenGraph from "../../components/Graph/SentimenGraph";
+import TotalSentimen from "../../components/Card/TotalSentimen";
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+];
+
+const percentage = [
+  {
+    sentimen: "Negative",
+    count: "115",
+  },
+  {
+    sentimen: "Netral",
+    count: "80",
+  },
+  {
+    sentimen: "Positive",
+    count: "70",
+  },
+];
 
 const drawerWidth = 240;
 
@@ -76,7 +108,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Marketplace = () => {
+function TokopediaDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -93,6 +125,11 @@ const Marketplace = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //Uncomment Function Berikut
+  // React.useEffect(async () => {
+  //   await getCrawlDataTokopedia();
+  // }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -125,7 +162,7 @@ const Marketplace = () => {
             sx={{ flexGrow: 1 }}
             align="right"
           >
-            Marketplace
+            Data Tweet
           </Typography>
         </Toolbar>
       </AppBar>
@@ -160,29 +197,46 @@ const Marketplace = () => {
         <Toolbar />
         <Container maxWidth="xl">
           <Grid container spacing={2} marginTop={4}>
-            <Grid item xs={4}>
-              <TokopediaCard />
+            <Grid container>
+              <Grid container xs={12} justifyContent="flex-start">
+                <Typography>Hasil Analisa Sentimen Tokopedia</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <ShopeeCard />
+            <Grid container>
+              <Grid item sx={6}>
+                <SentimenGraph />
+              </Grid>
+              <Grid item sx={6}>
+                <TotalSentimen />
+              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <LazadaCard />
-            </Grid>
-          </Grid>
-          <Grid container marginTop={4}>
-            <Grid xs={2} />
-            <Grid item xs={4}>
-              <BlibliCard />
-            </Grid>
-            <Grid item xs={4}>
-              <BukalapakCard />
+            <Grid container>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Sentimen</TableCell>
+                      <TableCell>Jumlah</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {percentage.map((row) => (
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          {row.sentimen}
+                        </TableCell>
+                        <TableCell>{row.count}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
           </Grid>
         </Container>
       </Box>
     </Box>
   );
-};
+}
 
-export default Marketplace;
+export default TokopediaDataTweet;

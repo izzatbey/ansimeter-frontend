@@ -11,7 +11,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBoxOutlined";
 import { mdiCheckboxMarkedCircleOutline } from "@mdi/js";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const mainList = [
   {
