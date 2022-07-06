@@ -155,10 +155,9 @@ function TokopediaDataTweet() {
     navigate("/grafik-tokped");
   };
 
-  //Uncomment Function Berikut
-  // React.useEffect(async () => {
-  //   await getCrawlDataTokopedia();
-  // }, []);
+  React.useEffect(async () => {
+    await getCrawlDataTokopedia();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
