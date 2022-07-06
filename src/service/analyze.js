@@ -1,31 +1,7 @@
-export const postAnalyzeTokped = async () => {
+export const postAnalyzeTokped = async (data) => {
   try {
-    const response = await axios.post(
-      "/start",
-      JSON.stringify({
-        name,
-        url,
-        operator,
-        period,
-        description,
-        skill,
-        motive,
-        opportunity,
-        population,
-        discovery,
-        exploit,
-        awareness,
-        intrusion,
-        confidentality,
-        integrity,
-        availability,
-        accountability,
-        financial,
-        reputation,
-        compliance,
-        privacy,
-      })
-    );
+    const response = await axios.post("/analyze-tweets", JSON.stringify(data));
+    console.log(response);
     return true;
   } catch (err) {
     console.log(err);

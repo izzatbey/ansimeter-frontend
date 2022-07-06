@@ -23,7 +23,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getCrawlDataTokopedia } from "../../service/crawl";
+import {
+  getCrawlDataTokopedia,
+  getCrawlDataTokopediav2,
+} from "../../service/crawl";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../redux/slice/tweet";
 
@@ -39,52 +42,52 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
-const data = [
-  {
-    date: "2022-07-05 10:30:25+00:00",
-    tweet:
-      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
-    username: "FJB Android",
-  },
-  {
-    date: "2022-07-05 10:10:59+00:00",
-    tweet: "b'@BukaBantuan Pls cdm ya,,'",
-    username: "gembrot",
-  },
-  {
-    date: "2022-07-05 10:30:25+00:00",
-    tweet:
-      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
-    username: "FJB Android",
-  },
-  {
-    date: "2022-07-05 10:10:59+00:00",
-    tweet: "b'@BukaBantuan Pls cdm ya,,'",
-    username: "gembrot",
-  },
-  {
-    date: "2022-07-05 10:30:25+00:00",
-    tweet:
-      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
-    username: "FJB Android",
-  },
-  {
-    date: "2022-07-05 10:10:59+00:00",
-    tweet: "b'@BukaBantuan Pls cdm ya,,'",
-    username: "gembrot",
-  },
-  {
-    date: "2022-07-05 10:30:25+00:00",
-    tweet:
-      "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
-    username: "FJB Android",
-  },
-  {
-    date: "2022-07-05 10:10:59+00:00",
-    tweet: "b'@BukaBantuan Pls cdm ya,,'",
-    username: "gembrot",
-  },
-];
+// const data = [
+//   {
+//     date: "2022-07-05 10:30:25+00:00",
+//     tweet:
+//       "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+//     username: "FJB Android",
+//   },
+//   {
+//     date: "2022-07-05 10:10:59+00:00",
+//     tweet: "b'@BukaBantuan Pls cdm ya,,'",
+//     username: "gembrot",
+//   },
+//   {
+//     date: "2022-07-05 10:30:25+00:00",
+//     tweet:
+//       "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+//     username: "FJB Android",
+//   },
+//   {
+//     date: "2022-07-05 10:10:59+00:00",
+//     tweet: "b'@BukaBantuan Pls cdm ya,,'",
+//     username: "gembrot",
+//   },
+//   {
+//     date: "2022-07-05 10:30:25+00:00",
+//     tweet:
+//       "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+//     username: "FJB Android",
+//   },
+//   {
+//     date: "2022-07-05 10:10:59+00:00",
+//     tweet: "b'@BukaBantuan Pls cdm ya,,'",
+//     username: "gembrot",
+//   },
+//   {
+//     date: "2022-07-05 10:30:25+00:00",
+//     tweet:
+//       "b'@BukaBantuan pesanan 223292304153 dari pagi request kurir ga dateng2 sampe kami pulang, coba di drop di agen lion parcel ga bisa, krn wajib di pickup. Mohon dibantu'",
+//     username: "FJB Android",
+//   },
+//   {
+//     date: "2022-07-05 10:10:59+00:00",
+//     tweet: "b'@BukaBantuan Pls cdm ya,,'",
+//     username: "gembrot",
+//   },
+// ];
 
 const drawerWidth = 240;
 
@@ -144,6 +147,7 @@ function TokopediaDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [data, setData] = React.useState([]);
   const selector = useSelector((state) => state.tweet);
   const dispatch = useDispatch();
 
@@ -163,17 +167,15 @@ function TokopediaDataTweet() {
     navigate("/tokped-analyze-tweet");
   };
 
-  //Uncomment Function Berikut
-  // React.useEffect(async () => {
-  //   const object = await getCrawlDataTokopedia();
-  //   dispatch(actions.setData(object));
-  //   console.log(selector.data);
-  // }, []);
+  const fetchData = async () => {
+    const object = await getCrawlDataTokopedia();
+    console.log(object);
+    setData(object);
+  };
 
-  // React.useEffect(async () => {
-  //   dispatch(actions.setData(data));
-  //   console.log(selector.data);
-  // }, []);
+  React.useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -260,20 +262,21 @@ function TokopediaDataTweet() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.map((row) => (
-                      <TableRow
-                        key={row.date}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.date}
-                        </TableCell>
-                        <TableCell>{row.username}</TableCell>
-                        <TableCell>{row.tweet}</TableCell>
-                      </TableRow>
-                    ))}
+                    {data &&
+                      data.map((row) => (
+                        <TableRow
+                          key={row.date}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.date}
+                          </TableCell>
+                          <TableCell>{row.username}</TableCell>
+                          <TableCell>{row.tweet}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
