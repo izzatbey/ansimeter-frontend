@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: []
+  sentimen: []
 };
 
 const slice = createSlice({
-  name: "tweet",
+  name: "sentimen",
   initialState,
   reducers: {
-    setData(state, action) {
-      state.data = action.payload;
+    setSentimen(state, action) {
+      state.sentimen = action.payload;
     },
   },
 });

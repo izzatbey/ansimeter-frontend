@@ -23,7 +23,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getCrawlDataTokopedia } from "../../service/crawl";
+import { getCrawlDataLazada } from "../../service/crawl";
 import { actions } from "../../redux/slice/tweet"
 import { postAnalyze } from "../../service/analyze"
 import { useDispatch, useSelector } from "react-redux";
@@ -82,7 +82,7 @@ const useStyles = makeStyles({
   },
 });
 
-function TokopediaDataTweet() {
+function LazadaAnalyzeTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -104,7 +104,7 @@ function TokopediaDataTweet() {
   };
 
   const handleClick = () => {
-    navigate("/grafik-tokped");
+    navigate("/grafik-lazada");
   };
 
   const fetchData = async () => {
@@ -188,7 +188,7 @@ function TokopediaDataTweet() {
           <Grid container spacing={2} marginTop={4}>
             <Grid container>
               <Grid container xs={6} justifyContent="flex-start">
-                <Typography>Data Tweet Bersentimen Tokopedia</Typography>
+                <Typography>Data Tweet Bersentimen Lazada</Typography>
               </Grid>
               <Grid container xs={6} justifyContent="flex-end">
                 <Button onClick={handleClick}>Lihat Grafik</Button>
@@ -232,4 +232,4 @@ function TokopediaDataTweet() {
   );
 }
 
-export default TokopediaDataTweet;
+export default LazadaAnalyzeTweet;

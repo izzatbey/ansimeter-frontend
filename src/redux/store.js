@@ -16,7 +16,7 @@ const persistConfig = {
   key: "root",
   storage,
   keyPrefix: "redux-",
-  whitelist: ["tweet"],
+  whitelist: ["tweet", "sentimen"],
 };
 
 const persist = persistReducer(persistConfig, reducers);

@@ -1,12 +1,13 @@
-export const postUrlList = async ([{ sentimen }]) => {
+import axios from "../api/axios"
+
+export const postCountSentiment = async (data) => {
   try {
     const response = await axios.post(
-      "/start",
-      JSON.stringify({
-        sentimen,
-      })
+      "/count-sentiment",
+      JSON.stringify(data)
     );
-    return true;
+    console.log(response.data)
+    return response.data;
   } catch (err) {
     console.log(err);
     return false;
