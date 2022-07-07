@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -23,10 +23,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getCrawlDataTokopedia } from "../../service/crawl";
-import { actions } from "../../redux/slice/tweet"
-import { postAnalyze } from "../../service/analyze"
+import { getCrawlDataBukalapak } from "../../service/crawl";
+import SentimenGraph from "../../components/Graph/SentimenGraph";
+import TotalSentimen from "../../components/Card/TotalSentimen";
+import { postCountSentiment } from "../../service/sentimen";
 import { useDispatch, useSelector } from "react-redux";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chart from "react-apexcharts";
+import { actions } from "../../redux/slice/sentimen";
+import { CardValue } from "../../components/Card/Card";
 
 const drawerWidth = 240;
 
@@ -82,15 +88,17 @@ const useStyles = makeStyles({
   },
 });
 
-function TokopediaDataTweet() {
+function BukalapakDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [sentimen, setSentimen] = React.useState([])
-  const classes = useStyles();
+  const [count, setCount] = React.useState([]);
   const selector = useSelector((state) => state.tweet);
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  var negative = 0;
+  var netral = 0;
+  var positive = 0;
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -103,17 +111,23 @@ function TokopediaDataTweet() {
     setAnchorEl(null);
   };
 
-  const handleClick = () => {
-    navigate("/grafik-tokped");
+  const entryData = (src) => {
+    let data = [];
+    let total;
+
+    src.forEach((row) => {
+      data.push({
+        sentimen: Object.keys(row),
+        count: Object.values(row),
+      });
+      total += Object.values(row);
+    });
+    return data;
   };
 
   const fetchData = async () => {
-    console.log(selector.data)
-    const object = await postAnalyze(selector.data);
-    dispatch(actions.setData(object.data))
-    console.log(selector.data)
-    setSentimen(object.data)
-    console.log(sentimen)
+    const object = await postCountSentiment(selector.data);
+    setCount(entryData(object.data));
   };
 
   React.useEffect(() => {
@@ -151,7 +165,7 @@ function TokopediaDataTweet() {
             sx={{ flexGrow: 1 }}
             align="right"
           >
-            Data Sentimen
+            Data Tweet
           </Typography>
         </Toolbar>
       </AppBar>
@@ -187,11 +201,16 @@ function TokopediaDataTweet() {
         <Container maxWidth="xl">
           <Grid container spacing={2} marginTop={4}>
             <Grid container>
-              <Grid container xs={6} justifyContent="flex-start">
-                <Typography>Data Tweet Bersentimen Tokopedia</Typography>
+              <Grid container xs={12} justifyContent="flex-start">
+                <Typography>Hasil Analisa Sentimen Bukalapak</Typography>
               </Grid>
-              <Grid container xs={6} justifyContent="flex-end">
-                <Button onClick={handleClick}>Lihat Grafik</Button>
+            </Grid>
+            <Grid container>
+              <Grid item sx={6}>
+                <SentimenGraph data={count} />
+              </Grid>
+              <Grid item sx={6}>
+                <CardValue title="Total" data={count}/>
               </Grid>
             </Grid>
             <Grid container>
@@ -199,26 +218,17 @@ function TokopediaDataTweet() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Tanggal Tweet</TableCell>
-                      <TableCell>Username</TableCell>
-                      <TableCell>Data Tweet</TableCell>
                       <TableCell>Sentimen</TableCell>
+                      <TableCell>Jumlah</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {sentimen && sentimen.map((row) => (
-                      <TableRow
-                        key={row.date}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
+                    {count.map((row) => (
+                      <TableRow>
                         <TableCell component="th" scope="row">
-                          {row.date}
+                          {row.sentimen}
                         </TableCell>
-                        <TableCell>{row.username}</TableCell>
-                        <TableCell>{row.tweet}</TableCell>
-                        <TableCell>{row.sentiment}</TableCell>
+                        <TableCell>{row.count}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -232,4 +242,4 @@ function TokopediaDataTweet() {
   );
 }
 
-export default TokopediaDataTweet;
+export default BukalapakDataTweet;

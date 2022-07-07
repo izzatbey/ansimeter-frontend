@@ -1,38 +1,44 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import React, { Component } from "react";
+import React from "react";
 import Chart from "react-apexcharts";
 
-class SentimenGraph extends Component {
-  constructor(props) {
-    super(props);
+const SentimenGraph = ({data}) => {
+  const sentimenPercentage = (src) => {
+    let data = [];
+    let temp;
+    let percentage;
 
-    this.state = {
-      series: [44, 55, 41],
-      charOptions: {
-        labels: ["Positif", "Negatif", "Netral"],
-      },
-    };
+    src.forEach((row) => {
+      temp = Object.values(row.count);
+      temp = temp.pop();
+      data.push(temp);
+    });
+    return data
+  };
+  const label = {
+    options: {
+      labels: ['Negatif','Netral','Positif']
+    },
+    series: sentimenPercentage(data),
   }
-
-  render() {
-    return (
-      <Card sx={{ margin: 4 }}>
-        <CardContent>
-          <Typography variant="h5" component="div">
-            Grafik Sentimen
-          </Typography>
-          <div className="donut">
-            <Chart
-              options={this.state.charOptions}
-              series={this.state.series}
-              type="pie"
-              width="380"
-            />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-}
+  
+  return (
+    <Card sx={{ margin: 4 }}>
+      <CardContent>
+        <Typography variant="h5" component="div">
+          Grafik Sentimen
+        </Typography>
+        <div className="donut">
+          <Chart
+            options={label.options}
+            series={label.series}
+            type="pie"
+            width="380"
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default SentimenGraph;

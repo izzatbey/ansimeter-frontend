@@ -26,33 +26,13 @@ import Paper from "@mui/material/Paper";
 import { getCrawlDataTokopedia } from "../../service/crawl";
 import SentimenGraph from "../../components/Graph/SentimenGraph";
 import TotalSentimen from "../../components/Card/TotalSentimen";
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-const percentage = [
-  {
-    sentimen: "Negative",
-    count: "115",
-  },
-  {
-    sentimen: "Netral",
-    count: "80",
-  },
-  {
-    sentimen: "Positive",
-    count: "70",
-  },
-];
+import { postCountSentiment } from "../../service/sentimen";
+import { useDispatch, useSelector } from "react-redux";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chart from "react-apexcharts";
+import { actions } from "../../redux/slice/sentimen";
+import { CardValue } from "../../components/Card/Card";
 
 const drawerWidth = 240;
 
@@ -112,8 +92,13 @@ function TokopediaDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [count, setCount] = React.useState([]);
+  const selector = useSelector((state) => state.tweet);
+  const dispatch = useDispatch();
   const classes = useStyles();
-
+  var negative = 0;
+  var netral = 0;
+  var positive = 0;
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -126,10 +111,28 @@ function TokopediaDataTweet() {
     setAnchorEl(null);
   };
 
-  //Uncomment Function Berikut
-  // React.useEffect(async () => {
-  //   await getCrawlDataTokopedia();
-  // }, []);
+  const entryData = (src) => {
+    let data = [];
+    let total;
+
+    src.forEach((row) => {
+      data.push({
+        sentimen: Object.keys(row),
+        count: Object.values(row),
+      });
+      total += Object.values(row);
+    });
+    return data;
+  };
+
+  const fetchData = async () => {
+    const object = await postCountSentiment(selector.data);
+    setCount(entryData(object.data));
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -204,10 +207,10 @@ function TokopediaDataTweet() {
             </Grid>
             <Grid container>
               <Grid item sx={6}>
-                <SentimenGraph />
+                <SentimenGraph data={count} />
               </Grid>
               <Grid item sx={6}>
-                <TotalSentimen />
+                <CardValue title="Total" data={count}/>
               </Grid>
             </Grid>
             <Grid container>
@@ -220,7 +223,7 @@ function TokopediaDataTweet() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {percentage.map((row) => (
+                    {count.map((row) => (
                       <TableRow>
                         <TableCell component="th" scope="row">
                           {row.sentimen}

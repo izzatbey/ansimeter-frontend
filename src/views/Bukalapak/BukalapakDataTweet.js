@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -23,10 +23,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { getCrawlDataTokopedia } from "../../service/crawl";
-import { actions } from "../../redux/slice/tweet"
-import { postAnalyze } from "../../service/analyze"
+import {
+  getCrawlDataBukalapak
+} from "../../service/crawl";
 import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../../redux/slice/tweet";
 
 const drawerWidth = 240;
 
@@ -82,14 +83,13 @@ const useStyles = makeStyles({
   },
 });
 
-function TokopediaDataTweet() {
+function BukalapakDataTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [sentimen, setSentimen] = React.useState([])
-  const classes = useStyles();
+  const [data, setData] = React.useState([]);
   const selector = useSelector((state) => state.tweet);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -104,16 +104,15 @@ function TokopediaDataTweet() {
   };
 
   const handleClick = () => {
-    navigate("/grafik-tokped");
+    navigate("/bukalapak-analyze-tweet");
   };
 
   const fetchData = async () => {
+    const object = await getCrawlDataBukalapak();
+    console.log(object);
+    setData(object);
+    dispatch(actions.setData(object))
     console.log(selector.data)
-    const object = await postAnalyze(selector.data);
-    dispatch(actions.setData(object.data))
-    console.log(selector.data)
-    setSentimen(object.data)
-    console.log(sentimen)
   };
 
   React.useEffect(() => {
@@ -151,7 +150,7 @@ function TokopediaDataTweet() {
             sx={{ flexGrow: 1 }}
             align="right"
           >
-            Data Sentimen
+            Data Tweet
           </Typography>
         </Toolbar>
       </AppBar>
@@ -188,10 +187,10 @@ function TokopediaDataTweet() {
           <Grid container spacing={2} marginTop={4}>
             <Grid container>
               <Grid container xs={6} justifyContent="flex-start">
-                <Typography>Data Tweet Bersentimen Tokopedia</Typography>
+                <Typography>Data Tweet Bukalapak</Typography>
               </Grid>
               <Grid container xs={6} justifyContent="flex-end">
-                <Button onClick={handleClick}>Lihat Grafik</Button>
+                <Button onClick={handleClick}>Analisa Tweet</Button>
               </Grid>
             </Grid>
             <Grid container>
@@ -202,25 +201,24 @@ function TokopediaDataTweet() {
                       <TableCell>Tanggal Tweet</TableCell>
                       <TableCell>Username</TableCell>
                       <TableCell>Data Tweet</TableCell>
-                      <TableCell>Sentimen</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {sentimen && sentimen.map((row) => (
-                      <TableRow
-                        key={row.date}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.date}
-                        </TableCell>
-                        <TableCell>{row.username}</TableCell>
-                        <TableCell>{row.tweet}</TableCell>
-                        <TableCell>{row.sentiment}</TableCell>
-                      </TableRow>
-                    ))}
+                    {data &&
+                      data.map((row) => (
+                        <TableRow
+                          key={row.date}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.date}
+                          </TableCell>
+                          <TableCell>{row.username}</TableCell>
+                          <TableCell>{row.tweet}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -232,4 +230,4 @@ function TokopediaDataTweet() {
   );
 }
 
-export default TokopediaDataTweet;
+export default BukalapakDataTweet;

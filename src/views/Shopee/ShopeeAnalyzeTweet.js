@@ -82,7 +82,7 @@ const useStyles = makeStyles({
   },
 });
 
-function TokopediaDataTweet() {
+function ShopeeAnalyzeTweet() {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -104,7 +104,7 @@ function TokopediaDataTweet() {
   };
 
   const handleClick = () => {
-    navigate("/grafik-tokped");
+    navigate("/grafik-shopee");
   };
 
   const fetchData = async () => {
@@ -188,7 +188,7 @@ function TokopediaDataTweet() {
           <Grid container spacing={2} marginTop={4}>
             <Grid container>
               <Grid container xs={6} justifyContent="flex-start">
-                <Typography>Data Tweet Bersentimen Tokopedia</Typography>
+                <Typography>Data Tweet Bersentimen Shopee</Typography>
               </Grid>
               <Grid container xs={6} justifyContent="flex-end">
                 <Button onClick={handleClick}>Lihat Grafik</Button>
@@ -232,4 +232,4 @@ function TokopediaDataTweet() {
   );
 }
 
-export default TokopediaDataTweet;
+export default ShopeeAnalyzeTweet;

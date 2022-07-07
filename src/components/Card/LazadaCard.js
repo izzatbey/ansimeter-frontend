@@ -5,8 +5,13 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 export default function LazadaCard() {
+  const navigate = useNavigate();
+  const handleClick = async () => {
+    navigate("/lazada-data-tweet");
+  };
   return (
     <Card sx={{ maxWidth: 345, marginTop: 4 }}>
       <CardMedia
@@ -21,7 +26,7 @@ export default function LazadaCard() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button>Pilih</Button>
+        <Button onClick={handleClick}>Pilih</Button>
       </CardActions>
     </Card>
   );
